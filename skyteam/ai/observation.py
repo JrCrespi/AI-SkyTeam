@@ -13,6 +13,7 @@ from typing import Any
 
 from skyteam.core.enums import DecisionKind, GamePhase, GameStatus, Player
 from skyteam.core.game import SkyTeamGame
+from skyteam.mechanics import axis, engines
 
 MAX_ALTITUDE_SPACES = 7
 MAX_APPROACH_SPACES = 12
@@ -43,7 +44,8 @@ def vector_layout(game: SkyTeamGame) -> list[Segment]:
         Segment("me_is_active", 1, "1 if it is the observing player's placement turn"),
         Segment("pending", len(DECISIONS), "one-hot kind of the first pending decision (zeros if none)"),
         Segment("own_dice", c.dice_per_player * (c.die_sides + 1),
-                "per own die ordinal: one-hot value (6) + 'still hidden' flag; zeros once placed"),
+                "own hidden dice sorted by value: one-hot value (6) + 'present' flag; zeros past the last"),
+        Segment("own_value_counts", c.die_sides, "per value 1..6: own hidden dice showing it / dice per player"),
         Segment("partner_hidden", 1, "partner hidden dice count / dice per player"),
         Segment("slots_occupied", n_slots, "per panel slot (panel order): 1 if occupied"),
         Segment("slots_value", n_slots, "per panel slot: value of the piece / die sides (0 if empty)"),
@@ -66,6 +68,16 @@ def vector_layout(game: SkyTeamGame) -> list[Segment]:
         Segment("last_speed", 1, f"last speed this round / {MAX_SPEED} (0 if not resolved)"),
         Segment("final_round", 1, "1 during the landing round"),
         Segment("status", len(STATUSES), "one-hot GameStatus"),
+        # derived, player-relative features (computed only from what this player can see)
+        Segment("axis_rel", axis_range, "one-hot axis from my side: sign flipped for the Co-Pilot, so "
+                "a partner die higher than mine always moves it up"),
+        Segment("partner_axis_die", c.die_sides + 1, "one-hot value of the partner's Axis die + 'placed' flag"),
+        Segment("partner_engine_die", c.die_sides + 1, "one-hot value of the partner's Engines die + 'placed' flag"),
+        Segment("my_axis_engine_placed", 2, "1 if my Axis / my Engines die is already placed"),
+        Segment("axis_spin_if", c.die_sides, "per value v: 1 if putting v on my Axis space now spins the plane"),
+        Segment("advance_if", c.die_sides, "per value v: spaces advanced / 2 if v completes the Engines now"),
+        Segment("crash_if", c.die_sides, "per value v: 1 if v on my Engines now collides or overshoots"),
+        Segment("too_fast_if", c.die_sides, "per value v (landing round): 1 if v makes the speed beat the brakes"),
     ]
 
 
@@ -97,14 +109,10 @@ def vector_observation(game: SkyTeamGame, player: Player, obs: dict[str, Any] | 
     pending = obs["pending"][0]["kind"] if obs["pending"] else None
     add(_one_hot(DECISIONS.index(DecisionKind(pending)), len(DECISIONS)) if pending else [0.0] * len(DECISIONS))
 
-    offset = 0 if player is Player.PILOT else c.dice_per_player
-    hidden = {d["die_id"]: d["value"] for d in obs["own_hidden_dice"]}
-    for ordinal in range(c.dice_per_player):
-        value = hidden.get(offset + ordinal)
-        if value is None:
-            add([0.0] * (c.die_sides + 1))
-        else:
-            add(_one_hot(value - 1, c.die_sides) + [1.0])
+    values = sorted(d["value"] for d in obs["own_hidden_dice"] if d["value"] is not None)
+    for k in range(c.dice_per_player):
+        add(_one_hot(values[k] - 1, c.die_sides) + [1.0] if k < len(values) else [0.0] * (c.die_sides + 1))
+    add([values.count(v) / c.dice_per_player for v in range(1, c.die_sides + 1)])
     add([obs["partner_hidden_dice_count"] / c.dice_per_player])
 
     placed = {f"die:{d['die_id']}": d for d in obs["placed_dice"]}
@@ -134,7 +142,53 @@ def vector_observation(game: SkyTeamGame, player: Player, obs: dict[str, Any] | 
     add([(obs["last_speed"] or 0) / MAX_SPEED])
     add([1.0 if alt_track.spaces[obs["altitude_index"]].final else 0.0])
     add(_one_hot(STATUSES.index(GameStatus(obs["status"])), len(STATUSES)))
+    add(_lookahead(game, player, obs))
     return out
+
+
+def _lookahead(game: SkyTeamGame, player: Player, obs: dict[str, Any]) -> list[float]:
+    """Consequences of my next Axis / Engines die, using the engine's own formulas (no speed modifiers)."""
+    c = game.panel.constants
+    sides = c.die_sides
+    sign = 1 if player is Player.PILOT else -1
+    by_slot = {d["slot"]: d for d in obs["placed_dice"]}
+
+    def kind_die(kind: str, owner: Player) -> dict | None:
+        for s in game.panel.slots:
+            if s.kind.value == kind and owner in s.owners and len(s.owners) == 1 and s.id in by_slot:
+                return by_slot[s.id]
+        return None
+
+    partner_axis = kind_die("axis", player.partner)
+    partner_engine = kind_die("engines", player.partner)
+    my_axis = kind_die("axis", player)
+    my_engine = kind_die("engines", player)
+    out: list[float] = []
+    rel = max(-c.axis_spin_at, min(c.axis_spin_at, sign * obs["axis"]))
+    out += _one_hot(rel + c.axis_spin_at, 2 * c.axis_spin_at + 1)
+    for die in (partner_axis, partner_engine):
+        out += _one_hot(die["value"] - 1, sides) + [1.0] if die else [0.0] * (sides + 1)
+    out += [1.0 if my_axis else 0.0, 1.0 if my_engine else 0.0]
+
+    spin, advance, crash, fast = [0.0] * sides, [0.0] * sides, [0.0] * sides, [0.0] * sides
+    if partner_axis and not my_axis:
+        for v in range(1, sides + 1):
+            pilot, copilot = (v, partner_axis["value"]) if player is Player.PILOT else (partner_axis["value"], v)
+            spin[v - 1] = 1.0 if axis.is_spin(obs["axis"] + axis.axis_delta(pilot, copilot), c.axis_spin_at) else 0.0
+    if partner_engine and not my_engine:
+        final = game.scenario.altitude_track.spaces[obs["altitude_index"]].final
+        traffic, pos = obs["traffic"], obs["approach_position"]
+        airport = game.scenario.approach_track.airport_index
+        limit = c.brake_thresholds[min(obs["brakes_deployed"], len(c.brake_thresholds) - 1)]
+        for v in range(1, sides + 1):
+            speed = v + partner_engine["value"]
+            if final:
+                fast[v - 1] = 1.0 if speed > limit else 0.0
+                continue
+            steps = engines.advance_for_speed(speed, obs["aero_blue"], obs["aero_orange"])
+            advance[v - 1] = steps / 2
+            crash[v - 1] = 1.0 if any(p >= airport or traffic[p] > 0 for p in range(pos, pos + steps)) else 0.0
+    return out + spin + advance + crash + fast
 
 
 def _pad(values: list[float], size: int) -> list[float]:

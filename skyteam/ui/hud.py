@@ -29,6 +29,7 @@ from skyteam.core.actions import (
 )
 from skyteam.core.enums import DecisionKind, GamePhase, GameStatus, Player
 from skyteam.core.game import SkyTeamGame
+from skyteam.replay import save_finished_game
 from skyteam.scenarios.loader import load_scenario
 
 W, H = 1280, 820
@@ -102,8 +103,9 @@ class HudState:
 
 class Hud:
     def __init__(self, screen: pygame.Surface, scenario: str = "YUL_green", seed: int | None = None,
-                 hot_seat: bool = True) -> None:
+                 hot_seat: bool = True, save_dir: str | None = None) -> None:
         self.screen = screen
+        self.save_dir = save_dir
         self.scenario = load_scenario(scenario)
         self.hot_seat = hot_seat
         self.font = pygame.font.Font(None, 22)
@@ -140,6 +142,8 @@ class Hud:
             self.ui.message = problems[0]
             return
         self.game.step(action)
+        if self.game.is_terminal() and self.save_dir:
+            save_finished_game(self.game, self.save_dir)
         self.ui.selected_die, self.ui.delta, self.ui.message = None, 0, ""
         self.ui.reroll_pick.clear()
         self._update_cover()
@@ -459,11 +463,12 @@ class Hud:
         self.button((W // 2 - 100, H // 2 + 50, 200, 50), "Novo jogo", lambda: self.new_game(), GREEN)
 
 
-def run(scenario: str = "YUL_green", seed: int | None = None, hot_seat: bool = True) -> None:
+def run(scenario: str = "YUL_green", seed: int | None = None, hot_seat: bool = True,
+        save_dir: str | None = "games") -> None:
     pygame.init()
     screen = pygame.display.set_mode((W, H))
     pygame.display.set_caption("Sky Team - HUD de teste")
-    hud = Hud(screen, scenario, seed, hot_seat)
+    hud = Hud(screen, scenario, seed, hot_seat, save_dir)
     clock = pygame.time.Clock()
     running = True
     while running:
@@ -485,8 +490,10 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--scenario", default="YUL_green")
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--no-hot-seat", action="store_true", help="não cobre a tela entre os turnos")
+    parser.add_argument("--games-dir", default="games", help="onde salvar as partidas terminadas")
+    parser.add_argument("--no-save", action="store_true", help="não salva as partidas")
     args = parser.parse_args(argv)
-    run(args.scenario, args.seed, not args.no_hot_seat)
+    run(args.scenario, args.seed, not args.no_hot_seat, None if args.no_save else args.games_dir)
 
 
 if __name__ == "__main__":

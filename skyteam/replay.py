@@ -55,3 +55,19 @@ class GameReplay:
             if (status.value, reason) != (self.result["status"], self.result["terminal_reason"]):
                 raise AssertionError(f"replay diverged: got {status.value}/{reason}, recorded {self.result}")
         return game
+
+
+DEFAULT_GAMES_DIR = Path("games")
+
+
+def save_finished_game(game: SkyTeamGame, directory: str | Path = DEFAULT_GAMES_DIR) -> Path:
+    """Store a finished game as a replay file (the raw data the imitation trainer learns from)."""
+    import time
+
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    status, _ = game.get_result()
+    name = f"{time.strftime('%Y%m%d-%H%M%S')}_{game.scenario.id}_{game.state.seed}_{status.value}.json"
+    path = directory / name
+    GameReplay.from_game(game).save(path)
+    return path

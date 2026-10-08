@@ -9,8 +9,8 @@ from .action_space import ActionSpace
 
 
 def action_mask(game: SkyTeamGame, space: ActionSpace, player: Player) -> list[bool]:
-    """``mask[i]`` is True iff ``space.decode(i, player)`` is legal now."""
+    """``mask[i]`` is True iff ``space.decode(i, player, game.state)`` is legal now."""
     mask = [False] * space.size
     for action in game.get_legal_actions(player):
-        mask[space.encode(action)] = True
+        mask[space.encode(action, game.state)] = True
     return mask

@@ -75,14 +75,14 @@ class SkyTeamEnv:
         player = self.current_player
         if player is None:
             return []
-        return [self.space.encode(a) for a in self.game.get_legal_actions(player)]
+        return sorted({self.space.encode(a, self.game.state) for a in self.game.get_legal_actions(player)})
 
     def step(self, action_index: int) -> tuple[Observation | None, float, bool, bool, dict[str, Any]]:
         """Apply the current player's action. Returns the next player's observation."""
         if self.done:
             raise RuntimeError("step() called on a finished episode; call reset()")
         player = self.current_player
-        action = self.space.decode(action_index, player)
+        action = self.space.decode(action_index, player, self.game.state)
         before = self.game.state.copy() if getattr(self.reward, "uses_before", True) else None
         result = self.game.step(action)
         self.steps += 1

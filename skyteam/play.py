@@ -22,6 +22,7 @@ from skyteam.core.actions import (
 )
 from skyteam.core.enums import DecisionKind, GamePhase, GameStatus, Player
 from skyteam.core.game import SkyTeamGame
+from skyteam.replay import save_finished_game
 from skyteam.scenarios.loader import load_scenario
 
 ROLE = {Player.PILOT: "Piloto (azul)", Player.COPILOT: "Co-Piloto (laranja)"}
@@ -194,7 +195,7 @@ def needs_privacy(game: SkyTeamGame) -> bool:
 
 
 def play(scenario: str = "YUL_green", seed: int | None = None, prompt: Prompt = input,
-         hot_seat: bool = True) -> SkyTeamGame:
+         hot_seat: bool = True, save_dir: str | None = None) -> SkyTeamGame:
     seed = random.randrange(10**9) if seed is None else seed
     game = SkyTeamGame(load_scenario(scenario))
     game.reset(seed)
@@ -230,6 +231,8 @@ def play(scenario: str = "YUL_green", seed: int | None = None, prompt: Prompt = 
         game.step(choose_action(game, player, prompt))
 
     print("\n".join(game.history()[-12:]))
+    if save_dir:
+        print(f"Partida salva em {save_finished_game(game, save_dir)}")
     status, reason = game.get_result()
     print()
     if status is GameStatus.WON:
@@ -244,9 +247,12 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--scenario", default="YUL_green")
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--no-hot-seat", action="store_true", help="não esconde a tela entre os turnos")
+    parser.add_argument("--games-dir", default="games", help="onde salvar as partidas terminadas")
+    parser.add_argument("--no-save", action="store_true", help="não salva as partidas")
     args = parser.parse_args(argv)
     try:
-        play(args.scenario, args.seed, hot_seat=not args.no_hot_seat)
+        play(args.scenario, args.seed, hot_seat=not args.no_hot_seat,
+             save_dir=None if args.no_save else args.games_dir)
     except (KeyboardInterrupt, EOFError):
         print("\nJogo encerrado.")
         sys.exit(0)

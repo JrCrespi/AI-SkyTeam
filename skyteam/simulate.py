@@ -52,10 +52,20 @@ class SimulationReport:
                 "steps_per_second": round(self.steps_per_second, 1), "outcomes": self.outcomes}
 
 
+def resolve_policy(policy: str) -> Policy:
+    """A name from ``POLICIES`` or a trained model file (``.pt``, needs torch)."""
+    if policy in POLICIES:
+        return POLICIES[policy]
+    if policy.endswith(".pt"):
+        from skyteam.ai.ppo import ModelAgent
+        return ModelAgent(policy)
+    raise ValueError(f"unknown policy {policy!r}: use one of {sorted(POLICIES)} or a .pt model file")
+
+
 def simulate(scenario: str, games: int, seed: int = 0, policy: str = "random") -> SimulationReport:
     """Play ``games`` games; game ``i`` uses engine seed ``seed + i`` (each one reproducible alone)."""
     sc = load_scenario(scenario)
-    choose = POLICIES[policy]
+    choose = resolve_policy(policy)
     outcomes: Counter[str] = Counter()
     steps = 0
     start = time.perf_counter()
@@ -81,7 +91,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--scenario", default="YUL_green")
     parser.add_argument("--games", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--policy", choices=sorted(POLICIES), default="random")
+    parser.add_argument("--policy", default="random", help="random, or the path of a trained model (.pt)")
     parser.add_argument("--json", action="store_true", help="print the report as JSON")
     args = parser.parse_args(argv)
     report = simulate(args.scenario, args.games, args.seed, args.policy)
