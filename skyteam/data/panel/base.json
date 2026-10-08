@@ -1,0 +1,45 @@
+{
+  "id": "base",
+  "source": "MB p.3-10 (Landing Procedure, EN)",
+  "constants": {
+    "dice_per_player": 4,
+    "die_sides": 6,
+    "axis_spin_at": 3,
+    "aero_blue_start": 4,
+    "aero_orange_start": 8,
+    "brake_thresholds": [1, 2, 4, 6],
+    "coffee_max": 3,
+    "coffee_max_per_die": 3,
+    "plane_tokens": 12,
+    "reroll_tokens": 2
+  },
+  "constants_notes": {
+    "axis_spin_at": "R-AXI-05: X after the 2nd mark on each side (illustration MB p.5). TODO_RULE_VERIFICATION P21",
+    "aero_blue_start": "Marker sits between N and N+1; stored as N. R-SET-02",
+    "aero_orange_start": "R-SET-02",
+    "brake_thresholds": "Speed must be <= value (marker between value and value+1). Index = brakes deployed. Index 1 (=2) is TODO_RULE_VERIFICATION P10a; index 2 (=4) confirmed by MB p.9 example.",
+    "coffee_max_per_die": "Bounded by coffee_max; listed separately so the action space stays fixed."
+  },
+  "slots": [
+    {"id": "axis.pilot",      "kind": "axis",    "owners": ["pilot"],   "mandatory": true},
+    {"id": "axis.copilot",    "kind": "axis",    "owners": ["copilot"], "mandatory": true},
+    {"id": "engines.pilot",   "kind": "engines", "owners": ["pilot"],   "mandatory": true},
+    {"id": "engines.copilot", "kind": "engines", "owners": ["copilot"], "mandatory": true},
+    {"id": "radio.pilot",     "kind": "radio",   "owners": ["pilot"]},
+    {"id": "radio.copilot.1", "kind": "radio",   "owners": ["copilot"]},
+    {"id": "radio.copilot.2", "kind": "radio",   "owners": ["copilot"]},
+    {"id": "gear.1", "kind": "landing_gear", "owners": ["pilot"], "values": [1, 2]},
+    {"id": "gear.2", "kind": "landing_gear", "owners": ["pilot"], "values": [3, 4]},
+    {"id": "gear.3", "kind": "landing_gear", "owners": ["pilot"], "values": [5, 6]},
+    {"id": "flaps.1", "kind": "flaps", "owners": ["copilot"], "values": [1, 2]},
+    {"id": "flaps.2", "kind": "flaps", "owners": ["copilot"], "values": [2, 3], "requires": "flaps.1"},
+    {"id": "flaps.3", "kind": "flaps", "owners": ["copilot"], "values": [4, 5], "requires": "flaps.2"},
+    {"id": "flaps.4", "kind": "flaps", "owners": ["copilot"], "values": [5, 6], "requires": "flaps.3"},
+    {"id": "brakes.1", "kind": "brakes", "owners": ["pilot"], "values": [2], "requires": null},
+    {"id": "brakes.2", "kind": "brakes", "owners": ["pilot"], "values": [4], "requires": "brakes.1"},
+    {"id": "brakes.3", "kind": "brakes", "owners": ["pilot"], "values": [6], "requires": "brakes.2"},
+    {"id": "concentration.1", "kind": "concentration", "owners": ["pilot", "copilot"]},
+    {"id": "concentration.2", "kind": "concentration", "owners": ["pilot", "copilot"]},
+    {"id": "concentration.3", "kind": "concentration", "owners": ["pilot", "copilot"]}
+  ]
+}

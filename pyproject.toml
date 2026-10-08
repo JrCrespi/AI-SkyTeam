@@ -1,0 +1,21 @@
+[project]
+name = "skyteam"
+version = "0.1.0"
+description = "Deterministic, data-driven rules engine for the Sky Team board game"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+ui = ["pygame>=2.5"]
+
+[tool.setuptools.packages.find]
+include = ["skyteam*"]
+
+[tool.setuptools.package-data]
+skyteam = ["data/**/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["rule(id): links a test to a rule id from docs/etapa1/regras_extraidas.md"]

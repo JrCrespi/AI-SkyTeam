@@ -1,0 +1,14 @@
+{
+  "id": "TEST_track",
+  "airport": "TST",
+  "verified": false,
+  "notes": "Synthetic track for tests only. NOT an official Sky Team track.",
+  "spaces": [
+    {"traffic": 0},
+    {"traffic": 1},
+    {"traffic": 0},
+    {"traffic": 2},
+    {"traffic": 0},
+    {"traffic": 0, "airport": true}
+  ]
+}

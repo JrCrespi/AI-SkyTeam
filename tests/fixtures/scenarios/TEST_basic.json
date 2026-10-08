@@ -1,0 +1,11 @@
+{
+  "id": "TEST_basic",
+  "airport": "TST",
+  "airport_name": "Test Airport",
+  "difficulty": "green",
+  "approach_track": "TEST_track",
+  "altitude_track": "green_yellow",
+  "modules": [],
+  "special_abilities": 0,
+  "description": "Synthetic scenario used by the tests. NOT an official scenario."
+}
