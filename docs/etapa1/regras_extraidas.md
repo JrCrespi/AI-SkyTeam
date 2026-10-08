@@ -260,7 +260,7 @@ cada cenário é a "correspondente ao nome e à cor do cenário" (RV p.2) e aind
 
 | Id | Aeroporto | Cor | Módulos (ícones) | Habilidades | Fonte | Observação |
 |---|---|---|---|---|---|---|
-| `YUL_green` | YUL | verde | — | 0 | MB, RV p.6 | Tutorial; tudo descrito no MB |
+| `YUL_green` | YUL | verde | — | 0 | MB, RV p.6 | Tutorial. Pista recebida: tráfego [0, 0, 1, 2, 1, 3, 2], 2 aviões no aeroporto. |
 | `LHR_green` | LHR | verde | — | 0 | RV p.6 | "há tráfego no final da sua abordagem" |
 | `HND_green` | HND | verde | — | 0 | RV p.6 | "curva ampla à esquerda", que sugere Curvas na pista |
 | `OSL_green` | OSL | verde | Querosene | 0 | RV p.6 | |

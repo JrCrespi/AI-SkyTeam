@@ -1,6 +1,6 @@
 # Matriz de cobertura das regras
 
-Atualizada ao fim de cada etapa. Situação atual: **Etapas 2 a 5 concluídas para o jogo base** (455 testes verdes). Módulos, habilidades e cenários oficiais vêm nas próximas etapas.
+Atualizada ao fim de cada etapa. Situação atual: **Etapas 2 a 5 concluídas para o jogo base** (559 testes verdes, incluindo YUL de ponta a ponta). Módulos, habilidades e cenários oficiais vêm nas próximas etapas.
 
 Os testes de ponta a ponta usam uma pista **sintética** (`tests/fixtures`), porque as pistas oficiais ainda não foram transcritas.
 
@@ -38,7 +38,8 @@ Os testes de ponta a ponta usam uma pista **sintética** (`tests/fixtures`), por
 | Habilidade Mastery | R-ABL-03 | Parcial (P23) | Não | Não | abilities/mastery.py | test_abilities.py |
 | Habilidade Synchronisation | R-ABL-04 | Parcial (P24) | Não | Não | abilities/synchronisation.py | test_abilities.py |
 | Demais habilidades | R-ABL-06 | Falta componente (P20) | Não | Não | abilities/ | test_abilities.py |
-| Cenários (21) | seção 18 | Parcial (pistas: P12) | Não | Não | data/scenarios/ | test_scenarios.py |
+| Cenário YUL_green (Etapa 6) | seção 18 | Manual + pista transcrita pelo João | Sim | Sim | data/scenarios/YUL_green.json | test_scenario_yul.py |
+| Demais cenários (20) | seção 18 | Parcial (pistas: P12) | Não | Não | data/scenarios/ | test_scenarios.py |
 | Aeroportos (11) | seção 16 | Manual | Não | Não | data/airports/ | test_scenarios.py |
 | Informação oculta | R-GEN-03 | Manual | Sim | Sim | core/visibility.py | test_visibility.py |
 | Serialização, clone, undo, replay por ações | — | — | Sim | Sim | core/state.py, core/game.py | test_serialization.py |

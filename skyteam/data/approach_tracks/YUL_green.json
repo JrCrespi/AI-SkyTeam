@@ -1,0 +1,16 @@
+{
+  "id": "YUL_green",
+  "airport": "YUL",
+  "verified": true,
+  "source": {"component": "YUL Montréal-Trudeau approach track (green)", "transcribed_by": "João, 2026-10-08"},
+  "notes": "Spaces in play order: index 0 is the starting space, the last is the airport. João listed them from the airport down.",
+  "spaces": [
+    {"traffic": 0},
+    {"traffic": 0},
+    {"traffic": 1},
+    {"traffic": 2},
+    {"traffic": 1},
+    {"traffic": 3},
+    {"traffic": 2, "airport": true}
+  ]
+}

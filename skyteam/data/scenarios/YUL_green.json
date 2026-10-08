@@ -1,0 +1,13 @@
+{
+  "id": "YUL_green",
+  "airport": "YUL",
+  "airport_name": "Montréal-Trudeau",
+  "difficulty": "green",
+  "approach_track": "YUL_green",
+  "altitude_track": "green_yellow",
+  "modules": [],
+  "special_abilities": 0,
+  "description": "Tutorial scenario of the Landing Procedure booklet.",
+  "source": "MB p.3; RV p.6",
+  "verified": true
+}
