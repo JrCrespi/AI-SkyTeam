@@ -10,7 +10,8 @@ A engine de regras é independente da interface e só usa a biblioteca padrão. 
 - **Etapa 1** (regras): conferida com os manuais oficiais em inglês.
 - **Etapas 2 a 5** (arquitetura, core, mecânicas, vitória e derrota): implementadas para o jogo base e testadas.
 - **Etapa 6**: YUL Montréal-Trudeau jogável de ponta a ponta.
-- **Pendente**: as demais pistas de aproximação, módulos, habilidades, API de IA, simulador e interface.
+- **Etapas 10 e 11**: ambiente de IA (ações, máscara, observação vetorial, recompensa), replay e simulador headless.
+- **Pendente**: as demais pistas de aproximação, módulos, habilidades e interface.
 
 ## Uso
 
@@ -28,6 +29,12 @@ print("\n".join(game.history()))
 
 Cenários disponíveis: `YUL_green` (Montréal, tutorial). Os demais entram conforme as pistas forem transcritas.
 
+Simulação sem interface:
+
+```bash
+python -m skyteam.simulate --scenario YUL_green --games 10000 --seed 0
+```
+
 ## Testes
 
 ```bash
@@ -41,4 +48,5 @@ python -m pytest
 - [Arquitetura](docs/architecture.md)
 - [Registro de regras](docs/etapa1/regras_extraidas.md) e [pendências](docs/etapa1/pendencias_regras.md)
 - [Mapeamento regra → código](docs/rules_mapping.md)
+- [Ambiente de IA e simulador](docs/ai_environment.md)
 - [Matriz de cobertura](docs/rules_coverage_matrix.md)

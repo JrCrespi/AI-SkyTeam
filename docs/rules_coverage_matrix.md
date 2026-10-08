@@ -1,6 +1,6 @@
 # Matriz de cobertura das regras
 
-Atualizada ao fim de cada etapa. Situação atual: **Etapas 2 a 5 concluídas para o jogo base** (559 testes verdes, incluindo YUL de ponta a ponta). Módulos, habilidades e cenários oficiais vêm nas próximas etapas.
+Atualizada ao fim de cada etapa. Situação atual: **Etapas 2 a 6, 10 e 11 concluídas para o jogo base e YUL** (586 testes verdes). Módulos, habilidades e cenários oficiais vêm nas próximas etapas.
 
 Os testes de ponta a ponta usam uma pista **sintética** (`tests/fixtures`), porque as pistas oficiais ainda não foram transcritas.
 
@@ -44,3 +44,6 @@ Os testes de ponta a ponta usam uma pista **sintética** (`tests/fixtures`), por
 | Informação oculta | R-GEN-03 | Manual | Sim | Sim | core/visibility.py | test_visibility.py |
 | Serialização, clone, undo, replay por ações | — | — | Sim | Sim | core/state.py, core/game.py | test_serialization.py |
 | Invariantes | — | — | Sim | Sim | core/validation.py | test_invariants.py |
+| Espaço de ações, máscara, observação vetorial (Etapa 10) | — | — | Sim | Sim | ai/action_space.py, ai/action_mask.py, ai/observation.py | test_ai.py |
+| Ambiente e recompensa (Etapa 10) | — | — | Sim | Sim | ai/environment.py, ai/rewards.py | test_ai.py |
+| Replay em arquivo e simulador headless (Etapa 11) | — | — | Sim | Sim | replay.py, simulate.py | test_replay_simulate.py |
