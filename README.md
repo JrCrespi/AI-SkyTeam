@@ -13,7 +13,21 @@ A engine de regras é independente da interface e só usa a biblioteca padrão. 
 - **Etapas 10 e 11**: ambiente de IA (ações, máscara, observação vetorial, recompensa), replay e simulador headless.
 - **Pendente**: as demais pistas de aproximação, módulos, habilidades e interface.
 
-## Uso
+## Jogar a dois (terminal)
+
+Precisa de Python 3.11 ou mais novo; não há outras dependências.
+
+```bash
+git clone https://github.com/JrCrespi/AI-SkyTeam.git
+cd AI-SkyTeam
+python -m skyteam.play
+```
+
+Os dois jogadores dividem o mesmo computador. Quando a vez passa, a tela é limpa e o jogo espera Enter,
+para que ninguém veja os dados do parceiro. Digite o número da opção; `h` mostra o histórico, `v` volta e
+`q` sai. `--seed N` repete uma partida.
+
+## Uso como biblioteca
 
 ```python
 from skyteam.core.game import SkyTeamGame
