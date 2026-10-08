@@ -7,7 +7,7 @@ A engine de regras é independente da interface. Nenhum asset comercial do jogo 
 
 ## Estado atual
 
-Etapa 1 (análise das regras), feita a partir do manual base e do Registro de Voo. Ainda não há código.
+Etapa 1 (análise das regras), conferida com os manuais oficiais em inglês (Landing Procedure e Flight Log). Ainda não há código.
 
 - [Análise técnica e arquitetura proposta](docs/00_analise_tecnica.md)
 - [Registro de regras (rascunho)](docs/etapa1/regras_extraidas.md)

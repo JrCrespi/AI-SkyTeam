@@ -1,6 +1,6 @@
 # Pendências de regras (TODO_RULE_VERIFICATION)
 
-Depois da leitura do manual base (MB) e do Registro de Voo (RV), sobram dois tipos de pendência:
+Depois da leitura dos manuais oficiais em inglês (MB = *Landing Procedure*, RV = *Flight Log*), sobram dois tipos de pendência:
 
 - **Componente**: o dado está impresso numa peça física que não está nos PDFs. Uma foto resolve.
 - **Interpretação**: o texto permite mais de uma leitura. Proponho um padrão, que a engine deixa configurável.
@@ -15,12 +15,11 @@ Ids referem-se a [`regras_extraidas.md`](regras_extraidas.md).
 | P12b | **As trilhas de altitude** (frente e verso): espaços, ícones de rerrolagem e a seta de primeiro jogador em cada espaço. | `data/altitude_tracks/` | R-TURN-02, R-RER-05, R-ALT-01/02 |
 | P14 | Faces do **dado de Tráfego**. | `modules/traffic_dice.py` | R-TRD-07 |
 | P16 | **Trilha de Querosene**: numeração completa e posição do X. | `modules/kerosene.py` | R-KER-05 |
-| P17 | **Placa e fichas de Estagiário**: quantas fichas, quais números e quantos espaços. A ilustração do RV mostra 6, 7(?), 3, 5 e 1 entre dois espaços de dado. | `modules/intern.py` | R-INT-08 |
+| P17 | **Fichas de Estagiário**: o conjunto completo da caixa. A placa tem 5 espaços (ilustração RV p.4). | `modules/intern.py` | R-INT-09 |
 | P18 | **Anel de Vento**: valor de cada espaço e o que acontece nos extremos. | `modules/wind.py` | R-WND-04 |
-| P20 | **Cartas de Habilidade Especial**: todas, com o texto legível. | `abilities/` | R-ABL-03/04 |
+| P20 | **Cartas de Habilidade Especial**: o Flight Log só reproduz Mastery e Synchronisation. Faltam as demais. | `abilities/` | R-ABL-06 |
 | P21 | Painel de controle: foto aproximada do disco do eixo (marcas e X), da escala de velocidade e da pista de freio, para confirmar o que foi lido nas ilustrações. | `data/panel/base.json` | R-AXI-05, R-ENG-05, R-BRK-05, R-GEA-01, R-FLA-01 |
 
-Se você tiver o Registro de Voo **original** (inglês ou francês), ele também ajuda: a tradução atual tem trechos truncados.
 
 ## B. Interpretações (padrão proposto)
 
@@ -33,13 +32,14 @@ Se você tiver o Registro de Voo **original** (inglês ou francês), ele também
 | P8 | Rádio com valor além do Aeroporto. | `radio.py` | Legal e sem efeito (R-RAD-03). | — |
 | P9 | Dado em Flap já acionado. | `flaps.py` | Legal e sem efeito, por analogia com o trem (MB p.7). | `rules.flap_reuse` |
 | P10a | Freio após o 1º acionamento: marcador entre 2 e 3? | `data/panel/base.json` | Tabela em dados: `[1.5, 2.5, 4.5, 6.5]` como "velocidade deve ser menor que". Confirmar pela foto (P21). | dados |
-| P10b | Condição D (velocidade < freios) é verificada quando o 2º dado do Motor é colocado (MB p.11, "quando você colocou os dados do Motor") ou no fim da rodada (RV p.5, Freios de Gelo)? Isso muda se um freio colocado depois do Motor, na mesma rodada final, conta. | `landing.py` | Fim da rodada final, com os freios finais. O MB p.10 diz "a força dos seus freios deve ser maior que sua velocidade" sem impor ordem, e o RV é explícito. | `rules.landing_brake_check` |
-| P13 | Segundo ícone do `TGU_red`. | `data/scenarios/TGU_red.json` | Fica fora até confirmar. | dados |
-| P15 | Curvas: em qual espaço se verifica o eixo ao avançar? | `modules/turns.py` | No espaço **de saída** de cada passo (Posição Atual antes de mover), seguindo "na tela Posição Atual". | `turns.check_space` |
+| P10b | **Só nos Freios de Gelo.** No jogo base, o texto em inglês resolve a dúvida: a velocidade é comparada com os freios no momento do 2º dado do Motor (R-BRK-07). Os Freios de Gelo dizem "at the end of the last round, your Speed must be lower than the Brake marker". | `ice_brakes.py` | Mesmo momento do jogo base. A frase dos Freios de Gelo foi lida como uma repetição da condição D, não como uma regra nova. | `ice_brakes.brake_check` |
+| P15 | Curvas: em qual espaço se verifica o eixo ao avançar? O inglês diz "not in one of the permitted positions in the Current Position screen" e "also applies to both spaces you fly through if you advance 2". | `modules/turns.py` | No espaço **de saída** de cada passo (Posição Atual antes de mover). Assim, avançando 2, verificam-se a posição inicial e o espaço intermediário. | `turns.check_space` |
 | P17b | Estagiário: colocar a ficha é imediato (ação extra) ou é a jogada do próximo turno? | `intern.py` | Imediato no mesmo turno ("Você pode então colocar essa ficha"). A ficha guardada não persiste. | `intern.token_timing` |
 | P18b | Vento: se o Motor for resolvido antes do Eixo, qual posição vale? | `wind.py` | A posição atual da ficha (que ainda reflete a rodada anterior). | — |
-| P19 | Freios de Gelo: os dois dados precisam ter o valor impresso no espaço? | `ice_brakes.py` | Sim, com valor igual ao número do espaço. | dados |
+| P19 | Freios de Gelo: os dois dados precisam ter o valor impresso no espaço? E quem pode jogar em cada fileira? A de cima é azul; a de baixo parece azul e laranja. | `ice_brakes.py` | O valor é igual ao número do espaço. Cima: só o Piloto. Baixo: qualquer jogador, pela cor da ilustração. Confirmar pela foto. | dados |
 | P20b | Habilidades: quem escolhe as cartas e quando. | `abilities/`, setup | Escolhidas no setup, antes da 1ª rodada, pelos dois jogadores juntos (é jogo cooperativo e a escolha é pública). | — |
+| P23 | Mastery: "only if a Reroll token is available". Disponível onde? Na caixa (o jogo tem 2 fichas) ou ainda não colocada na trilha de altitude? | `abilities/mastery.py` | Disponível = ficha que não está nem no estoque do painel nem na trilha de altitude, isto é, já gasta e devolvida. Há no máximo 2 fichas em jogo. | `mastery.token_source` |
+| P24 | Synchronisation: "placed at least one die on Landing Gear and one die on Flaps" vale **nesta rodada** ou no jogo? Pode ser usada mais de uma vez? Quem dispara? | `abilities/synchronisation.py` | Nesta rodada, uma vez por rodada, disparada automaticamente assim que a condição é cumprida ("immediately"). O dado de Tráfego é colocado pelo jogador que completou a condição. | `synchronisation.*` |
 | P22 | Tempo Real na engine headless: a engine não tem relógio. | `real_time.py`, env | A engine recebe `TimeExpiredAction` (sistema). A UI dispara essa ação após 60 s. Na simulação, um `TimePolicy` (por exemplo, um número máximo de colocações) a dispara. | `real_time.policy` |
 
 Cada padrão acima entra no código com `TODO_RULE_VERIFICATION` e a referência `P<n>`, e um teste fixa o comportamento.

@@ -4,14 +4,15 @@
 
 | Sigla | Documento | Páginas |
 |---|---|---|
-| **MB** | *Sky Team: Procedimento de Pouso* (manual base, PT-BR) | 12 |
-| **RV** | *Registro de Voo* (regras avançadas, tradução não oficial) | 8 |
+| **MB** | *Landing Procedure* (manual base). Texto de referência: `ST_Rules01_EN_06jun2023.pdf`. Edição PT-BR *Procedimento de Pouso* usada como apoio. | 12 |
+| **RV** | *Flight Log* (regras avançadas e cenários). Texto de referência: `ST_Rules02_EN_06jun2023.pdf`. A tradução não oficial *Registro de Voo* foi usada só como apoio. | 8 |
 
-A citação `MB p.5` indica a página impressa no rodapé do manual.
+A citação `MB p.5` indica a página impressa no rodapé. A paginação das edições em inglês e em português é a mesma.
 
-O RV é uma tradução de baixa qualidade, com nomes como "TRÁFEGO MORRE" no lugar de "dado de tráfego" e
-"DE ANÚNCIOS VOLTAS" no lugar de "Curvas", além de trechos truncados. Onde a tradução deixa o sentido
-incerto, a regra está marcada como **AMBÍGUA** e listada em [`pendencias_regras.md`](pendencias_regras.md).
+**Fonte de verdade: as edições oficiais em inglês.** A tradução PT do Flight Log tem trechos truncados e termos
+errados ("TRÁFEGO MORRE" = *Traffic Die*, "VOLTAS" = *Turns*). Toda regra deste registro foi conferida com o texto
+em inglês. Quando houve diferença, prevaleceu o inglês. O termo em inglês aparece entre parênteses onde ajuda a
+auditar.
 
 ## Status
 
@@ -163,7 +164,7 @@ Os ids das regras da versão anterior foram mantidos. Ids novos foram acrescenta
 | R-BRK-04 | Os freios só importam na rodada final. Não é obrigatório acionar todos. | MB p.9, p.10 | CONFIRMADA |
 | R-BRK-05 | Posições do marcador: começa à esquerda do 2. O exemplo diz que, com o segundo freio acionado, o marcador fica "entre 4 e 5". A posição após o 1º freio não é dita: pela ilustração, entre 2 e 3. Após o 3º freio, além do 6. | MB p.9, p.10 | Parte CONFIRMADA, parte ILUSTRAÇÃO (P10) |
 | R-BRK-06 | O marcador "não pode estar abaixo de 2". Sem nenhum freio acionado, não é possível parar o avião. | MB p.10 | CONFIRMADA. Equivale a perder por R-LND-04, já que a velocidade mínima é 2. |
-| R-BRK-07 | Condição de vitória D: Velocidade menor que a posição do marcador de freio. | MB p.9, p.10, p.11 | CONFIRMADA. O momento da comparação é AMBÍGUO (P10). |
+| R-BRK-07 | Condição de vitória D: Velocidade menor que a posição do marcador de freio. A comparação é feita **no momento em que o 2º dado do Motor é colocado**, com o marcador de freio daquele momento ("when playing the second engine die... compare it WITH YOUR BRAKES"; "Your Speed is less than your Brakes when you placed your Engine dice"). Um freio acionado depois disso, na rodada final, não conta para D. | MB p.10, p.11 | CONFIRMADA (inglês) |
 
 ## 12. Concentração e Café
 
@@ -197,7 +198,7 @@ Os ids das regras da versão anterior foram mantidos. Ids novos foram acrescenta
 | R-LND-01 | **A**: não há tokens de Avião na Pista de Aproximação. | MB p.7, p.11 | CONFIRMADA |
 | R-LND-02 | **B**: todos os interruptores de Flaps e de Trem de Pouso estão verdes. | MB p.11 | CONFIRMADA |
 | R-LND-03 | **C**: o eixo está completamente horizontal. | MB p.11 | CONFIRMADA |
-| R-LND-04 | **D**: a Velocidade é menor que os Freios. | MB p.11 | CONFIRMADA |
+| R-LND-04 | **D**: a Velocidade era menor que os Freios no momento em que os dados do Motor foram colocados. O resultado é registrado ao resolver o Motor e avaliado no fim da rodada, junto com A–C (ver R-BRK-07). | MB p.10, p.11 | CONFIRMADA (inglês) |
 | R-LND-05 | As condições são avaliadas **ao final** da rodada final. Se todas valem, vitória. | MB p.11 | CONFIRMADA |
 | R-LND-06 | Se alguma condição falha, a partida é perdida. | MB p.11 ("Você ganha se...") | INFERIDA: o manual só define a vitória, e não existe outro desfecho possível no fim da rodada final. |
 | R-LND-07 | As regras obrigatórias (R-MAND) continuam valendo na rodada final. | MB p.5 ("a cada rodada") | INFERIDA |
@@ -239,7 +240,7 @@ Lidos dos cards de cenário (RV p.6–8). A pista de cada aeroporto é um compon
 | KUL | Kuala Lumpur | amarelo, preto |
 | PBH | Paro | vermelho, preto |
 
-São 11 aeroportos. O RV não imprime o código de Haneda: HND é o código IATA real (inferido).
+São 11 aeroportos, com códigos confirmados no Flight Log em inglês (incluindo HND, que a tradução PT omitia).
 
 ## 17. Dificuldades
 
@@ -276,7 +277,7 @@ cada cenário é a "correspondente ao nome e à cor do cenário" (RV p.2) e aind
 | `HND_red` | HND | vermelho | Estágio | 1 | RV p.8 | |
 | `GIG_red` | GIG | vermelho | Vento, Vazamento de Querosene | 2 | RV p.8 | |
 | `OSL_red` | OSL | vermelho | Vazamento de Querosene, Freios de Gelo | 2 | RV p.8 | |
-| `TGU_red` | TGU | vermelho | Querosene + 2º ícone (parece Vento) | 2 | RV p.8 | 2º ícone AMBÍGUO (P13) |
+| `TGU_red` | TGU | vermelho | Querosene, Vento | 2 | RV p.8 | |
 | `KEF_black` | KEF | preto | Vento, Freios de Gelo | 2 | RV p.8 | |
 | `KUL_black` | KUL | preto | Querosene, Tempo Real | 2 | RV p.8 | |
 | `PBH_black` | PBH | preto | Querosene, Tempo Real | 2 | RV p.8 | |
@@ -334,14 +335,17 @@ Os efeitos de pista (Tráfego e Curvas) **não** aparecem nos cards. Eles estão
 | R-INT-05 | A ficha não pode ir para a Concentração. | RV p.4 | CONFIRMADA |
 | R-INT-06 | O dado colocado na placa tem que ter valor **diferente** da próxima ficha disponível. | RV p.4 | CONFIRMADA |
 | R-INT-07 | Se ainda houver fichas na placa no final do jogo, a partida é perdida. | RV p.4 | CONFIRMADA |
-| R-INT-08 | Quantas fichas, quais valores, quantos espaços, e se a colocação da ficha conta como a jogada do turno ou é imediata (extra). | | AMBÍGUA / FALTA COMPONENTE (P17) |
+| R-INT-08 | A placa tem um espaço de dado azul na ponta esquerda, 5 espaços de ficha e um espaço de dado laranja na ponta direita. "Mais próxima do seu lado": o Piloto pega da esquerda e o Copiloto da direita. A ilustração mostra as fichas 6, 4, 3, 5 e 1. | RV p.4 | ILUSTRAÇÃO |
+| R-INT-09 | Conjunto total de fichas de Estagiário na caixa (valores e quantidade), de onde saem as 5 aleatórias. | | FALTA COMPONENTE (P17) |
+| R-INT-10 | Colocar a ficha é imediato (no mesmo turno) ou ocupa a próxima jogada? | RV p.4 ("You can then place that token") | AMBÍGUA (P17b) |
+| R-INT-11 | O espaço de dado da placa pode ser usado mais de uma vez por rodada? Ele é um espaço como os outros, então fica ocupado até o fim da rodada. | RV p.4 | INFERIDA |
 
 ### Vento (`wind`)
 
 | Id | Regra | Fonte | Status |
 |---|---|---|---|
 | R-WND-01 | A ficha azul de Avião fica no Anel de Vento, à direita do painel, com o nariz apontando para o espaço central branco. | RV p.4 | CONFIRMADA |
-| R-WND-02 | Imediatamente após a fase do Eixo, a ficha gira tantos espaços quanto a posição atual do Eixo fora do centro, na direção da inclinação, mesmo que o Eixo não tenha se movido. | RV p.4 | CONFIRMADA |
+| R-WND-02 | Imediatamente após a fase do Eixo, a ficha gira tantos espaços quanto a posição atual do Eixo fora do centro, na direção da inclinação, mesmo que o Eixo não tenha se movido. Inclinação para o Piloto gira a ficha para a esquerda. | RV p.4 (exemplo) | CONFIRMADA |
 | R-WND-03 | Na fase do Motor, soma-se à velocidade o valor do espaço para onde a ficha aponta. Vale em todas as rodadas, inclusive na final. | RV p.4 | CONFIRMADA |
 | R-WND-04 | Valores do anel (o exemplo mostra +2) e o que acontece no fim do anel. | | FALTA COMPONENTE (P18) |
 | R-WND-05 | A "fase do Eixo" é o momento em que o 2º dado do Eixo é resolvido. Se o Motor for resolvido antes do Eixo na rodada, o Vento usa a posição da ficha nesse momento. | | INFERIDA, mas precisa de confirmação (P18) |
@@ -367,7 +371,7 @@ Os efeitos de pista (Tráfego e Curvas) **não** aparecem nos cards. Eles estão
 
 | Id | Regra | Fonte | Status |
 |---|---|---|---|
-| R-ICE-01 | A placa de Freios de Gelo cobre os freios originais. Ela tem uma fileira azul com 2, 3, 4 e 5 em cima, uma fileira laranja com 2, 3, 4 e 5 embaixo, e a pista do marcador no meio. | RV p.5 | CONFIRMADA (fileiras pela ilustração) |
+| R-ICE-01 | A placa de Freios de Gelo cobre os freios originais. Ela tem 4 espaços em cima (2, 3, 4 e 5), 4 espaços embaixo (2, 3, 4 e 5) e a pista do marcador no meio. Pela ilustração, a fileira de cima é azul e a de baixo é laranja e azul. | RV p.5 | CONFIRMADA. As cores dos espaços vêm da ILUSTRAÇÃO (P19). |
 | R-ICE-02 | Funciona como os freios normais, mas exige 2 dados de mesmo valor, um em cima e um embaixo, **na mesma rodada**. | RV p.5 | CONFIRMADA |
 | R-ICE-03 | Se um dado foi colocado num espaço e o espaço oposto não foi preenchido na mesma rodada, ele é perdido: retira-se o dado no final da rodada sem mover o marcador. | RV p.5 | CONFIRMADA |
 | R-ICE-04 | Não há interruptores. Os espaços são usados em ordem, da esquerda para a direita. | RV p.5 | CONFIRMADA |
@@ -383,8 +387,9 @@ Os efeitos de pista (Tráfego e Curvas) **não** aparecem nos cards. Eles estão
 |---|---|---|---|
 | R-ABL-01 | Alguns cenários oferecem cartas de Habilidade Especial. O número de estrelas no card indica quantas cartas usar (1 ou 2). | RV p.2 | CONFIRMADA |
 | R-ABL-02 | Cada carta oferece uma habilidade diferente. Os jogadores escolhem quais usar ("experimente... escolha aquelas que melhor o ajudarão"). | RV p.2 | CONFIRMADA |
-| R-ABL-03 | Cartas visíveis no RV: **Domínio** e **Sincronização**. O texto da Sincronização está ilegível na imagem. | RV p.2 | FALTA COMPONENTE |
-| R-ABL-04 | Lista completa de cartas, textos, quem usa, momento e reutilização. | | FALTA COMPONENTE (P20) |
+| R-ABL-03 | **Mastery** (Domínio): "If you play 2 dice with the same value on the ENGINES, immediately gain a Reroll token (only if a Reroll token is available)." | RV p.2 (carta reproduzida) | CONFIRMADA. "Available" é AMBÍGUO (P23). |
+| R-ABL-04 | **Synchronisation** (Sincronização): "If you have placed at least one die on Landing Gear and one die on Flaps, immediately roll the Traffic die. Place it on any empty space on the Control Panel regardless of its colour. Apply the effect of the Traffic die as if it were a normal die. It counts as an extra action for this turn." | RV p.2 (carta reproduzida) | CONFIRMADA. Escopo e uso são AMBÍGUOS (P24). |
+| R-ABL-06 | Demais cartas de habilidade: nomes, textos e quantidade. | | FALTA COMPONENTE (P20) |
 | R-ABL-05 | Quem escolhe as cartas e quando (antes da partida?). | RV p.2 | AMBÍGUA (P20) |
 
 ---
