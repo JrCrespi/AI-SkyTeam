@@ -27,6 +27,19 @@ Os dois jogadores dividem o mesmo computador. Quando a vez passa, a tela é limp
 para que ninguém veja os dados do parceiro. Digite o número da opção; `h` mostra o histórico, `v` volta e
 `q` sai. `--seed N` repete uma partida.
 
+## HUD gráfico provisório
+
+Tela de teste em Pygame, com visual próprio (não é a interface final da Etapa 12).
+
+```bash
+python -m pip install pygame
+python -m skyteam.ui.hud
+```
+
+Clique num dos seus dados e depois num espaço destacado: verde é jogada legal, amarelo só é legal gastando
+café (ajuste com os botões − e +). Quando a vez passa, a tela é coberta até o próximo jogador clicar em
+"Mostrar meus dados". `N` começa um novo jogo e `Esc` sai.
+
 ## Uso como biblioteca
 
 ```python
