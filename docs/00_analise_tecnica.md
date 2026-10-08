@@ -1,10 +1,8 @@
 # Sky Team em Python: análise técnica inicial
 
 > Documento da primeira resposta (seção 43 do pedido). Nenhum código de jogo foi escrito ainda.
-> Toda regra citada aqui vem de conhecimento prévio do jogo e **não foi conferida com o manual oficial**,
-> porque os manuais ainda não foram fornecidos ao projeto. Ver `docs/etapa1/` para o registro de regras
-> e o status de verificação de cada uma.
-
+> Escrito antes da chegada dos manuais e revisado depois da leitura do manual base e do Registro de Voo.
+> A seção 15 lista o que mudou. As regras com fonte e página estão em `docs/etapa1/regras_extraidas.md`.
 ---
 
 ## 1. Entendimento do objetivo
@@ -129,9 +127,9 @@ ModuleAction(player, module_id, kind: str, params: tuple)  # ações específica
 
 Pontos de projeto:
 
-- **Café é aplicado na mesma ação de colocação** (`coffee_delta`): pelo que conheço da regra, o café ajusta o
-  valor do dado no momento de colocar. Fazer isso atômico evita estados intermediários inúteis e simplifica
-  a máscara. `TODO_RULE_VERIFICATION` (R-COF-03).
+- **Café é aplicado na mesma ação de colocação** (`coffee_delta`): o café modifica o dado no momento de
+  colocá-lo (MB p.8, R-COF-03). Fazer isso numa ação atômica evita estados intermediários inúteis e simplifica
+  a máscara.
 - `game.get_legal_actions(player)` enumera; `game.is_action_legal(a)` e `game.explain_illegal_action(a)` usam
   **o mesmo validador**, que devolve uma lista de `Violation(code, message)`. Nunca há duas implementações
   da legalidade.
@@ -389,19 +387,34 @@ Seguindo a seção 39, com um critério de saída por etapa:
 
 ## 14. Pontos das regras a extrair/confirmar nos manuais
 
-Lista completa e numerada em [`docs/etapa1/pendencias_regras.md`](etapa1/pendencias_regras.md).
-Os que mais afetam a arquitetura:
+Depois da leitura dos dois manuais, as pendências caíram para componentes físicos não fotografados (pistas de
+aproximação, trilhas de altitude, cartas de habilidade, placas dos módulos) e algumas interpretações com padrão
+proposto. A lista completa está em [`docs/etapa1/pendencias_regras.md`](etapa1/pendencias_regras.md).
 
-1. Quem coloca o primeiro dado em cada rodada (sempre o Piloto ou alternado) e se a alternância é estrita.
-2. Momento exato e escopo do reroll (quem pode pedir, quais dados podem ser rolados de novo, se o parceiro decide).
-3. Café: quando pode ser gasto, se pode mudar o valor em mais de 1 por dado, limites 1 e 6, máximo de tokens.
-4. Eixo: limite exato que causa derrota e se a resolução é imediata.
-5. Motores: regra exata de comparação com os marcadores (estrito ou não), comportamento no espaço do aeroporto
-   e na última rodada.
-6. Tráfego: colisão ao *entrar* ou ao *passar* por espaço com avião; o que acontece ao ultrapassar o aeroporto.
-7. Rádio: como o valor do dado mapeia para o espaço-alvo (1 = espaço atual?).
-8. Valores permitidos de cada switch de trem, flaps e freios, e ordem obrigatória.
-9. Slots obrigatórios por rodada e a consequência de não preenchê-los.
-10. Requisitos completos do pouso e o que acontece se o avião chega ao aeroporto antes da última rodada.
-11. Lista oficial de aeroportos, pistas, cenários e dificuldades da caixa base.
-12. Lista oficial de módulos e habilidades da caixa base, com texto de efeito, momento e reutilização.
+---
+
+## 15. Ajustes na arquitetura após a leitura dos manuais
+
+1. **Primeiro jogador vem da trilha de altitude.** Cada espaço tem uma seta (MB p.4), então `AltitudeSpace` ganha
+   `first_player`. Isso descarta a ideia de política global.
+2. **O café é um número, não ±1.** Vários tokens podem ser gastos no mesmo dado (MB p.8). `PlaceDieAction.coffee_delta`
+   vai de −3 a +3, limitado pelos tokens disponíveis e pela faixa 1..6.
+3. **A rerrolagem é uma interrupção** de qualquer jogador "a qualquer momento" (MB p.4). Ela entra como janela de
+   reação no fluxo de turnos e gera `PendingDecision` para os dois jogadores (P3).
+4. **Os espaços do painel são reutilizáveis entre rodadas.** Trem já acionado aceita dado sem efeito (MB p.7). O slot
+   (ocupado nesta rodada) e o interruptor (acionado no jogo) passam a ser estados separados, como previsto.
+5. **O avanço é passo a passo, com evento por passo.** Colisão, ultrapassagem e Curvas verificam cada passo
+   (`PLANE_STEP` emitido antes de mover). Os efeitos de pista (`traffic_dice`, `turns`) são plugins ativados pelos
+   dados da pista, não pelo card do cenário.
+6. **Peças de jogo além dos dados.** As fichas de Estagiário são "dados" com valor fixo, sem café e sem
+   Concentração. O modelo vira `Placeable` (dado ou ficha) com flags `modifiable` e `allowed_in_concentration`.
+7. **Tempo Real sem relógio na engine.** `TimeExpiredAction` é emitida pelo sistema (UI ou `TimePolicy` na
+   simulação), e a engine continua determinística (P22).
+8. **Dois RNGs lógicos na mesma seed.** Os dados dos jogadores e o dado de Tráfego usam streams derivados da seed.
+   Assim a rolagem de tráfego não desloca a sequência dos dados dos jogadores, o que ajuda na comparação entre
+   políticas de IA.
+9. **Condições terminais com momento explícito.** Cada `LossCondition` declara quando é verificada: `IMMEDIATE`
+   (eixo, colisão, ultrapassagem, querosene, curvas), `ROUND_END` (obrigatórios, altitude) ou `GAME_END` (pouso,
+   estagiário, freios de gelo). Isso segue a tabela da seção 15 do registro de regras.
+10. **Ids dos cenários**: `<IATA>_<cor>` (ex.: `KEF_black`). Há 21 cenários e 11 aeroportos, e a mesma pista física
+    é compartilhada por cenários de cores diferentes quando o manual assim indicar.
