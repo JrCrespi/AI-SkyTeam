@@ -11,6 +11,7 @@ A engine de regras é independente da interface e só usa a biblioteca padrão. 
 - **Etapas 2 a 5** (arquitetura, core, mecânicas, vitória e derrota): implementadas para o jogo base e testadas.
 - **Etapa 6**: YUL Montréal-Trudeau jogável de ponta a ponta.
 - **Etapas 10 e 11**: ambiente de IA (ações, máscara, observação vetorial, recompensa), replay e simulador headless.
+- **IA**: modelo treinado por autojogo em `models/yul_ppo.pt`, pousa em 82% das partidas do YUL.
 - **Pendente**: as demais pistas de aproximação, módulos, habilidades e interface.
 
 ## Jogar a dois (terminal)
@@ -39,6 +40,24 @@ python -m skyteam.ui.hud
 Clique num dos seus dados e depois num espaço destacado: verde é jogada legal, amarelo só é legal gastando
 café (ajuste com os botões − e +). Quando a vez passa, a tela é coberta até o próximo jogador clicar em
 "Mostrar meus dados". `N` começa um novo jogo e `Esc` sai.
+
+## IA
+
+```bash
+python -m pip install -e ".[train]"      # torch e numpy
+
+# ver o modelo treinado jogar 1000 partidas
+python -m skyteam.simulate --scenario YUL_green --policy models/yul_ppo.pt --games 1000
+
+# continuar melhorando por autojogo
+python -m skyteam.ai.ppo --init models/yul_ppo.pt --steps 12000000 --config-bonus 0.2 --out runs/treino
+
+# aprender com as partidas gravadas em games/ e depois seguir por autojogo
+python -m skyteam.ai.imitation --data games --init models/yul_ppo.pt --out runs/bc.pt
+python -m skyteam.ai.ppo --init runs/bc.pt --out runs/treino2
+```
+
+Detalhes e resultados em [Ambiente de IA](docs/ai_environment.md#treinamento-da-ia).
 
 ## Uso como biblioteca
 

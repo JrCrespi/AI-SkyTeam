@@ -131,3 +131,57 @@ interface. `benchmark_simulations(games=10000)` faz o mesmo em código.
 Referência (política aleatória, 10.000 jogos de YUL, seed 0, container de desenvolvimento): cerca de
 600 jogos/s e 8.500 passos/s. Resultado: 86,7% de derrota por espaço obrigatório vazio, 12,7% por giro do
 eixo, 0,7% por colisão e nenhuma vitória, o esperado para jogadas aleatórias.
+
+## Treinamento da IA
+
+Requer `pip install -e ".[train]"` (torch e numpy). A engine continua sem dependências.
+
+### Autojogo (PPO)
+
+```bash
+python -m skyteam.ai.ppo --steps 12000000 --envs 128 --workers 4 --config-bonus 0.2 --out runs/meu_treino
+```
+
+Uma única rede (MLP 3×256, cabeças de política e de valor) joga pelos dois assentos; cada jogador só
+recebe a própria observação, então a rede não vê os dados escondidos do parceiro. Os logits fora da
+máscara são descartados. O treino roda vários jogos em paralelo (`--envs`, `--workers`) e, a cada
+`--eval-every` atualizações, avalia a política gulosa em `--eval-games` jogos com seeds fixas
+(a partir de 1.000.000, nunca usadas no treino). Em `--out` ficam `best.pt` (melhor avaliação),
+`last.pt` e `history.json`. `--init modelo.pt` continua um treino anterior.
+
+Recompensa de treino (`training_reward` em `rewards.py`): ±1 no fim do jogo, mais termos de
+modelagem para que o sinal apareça antes da primeira vitória. São eles: rodada sobrevivida
+(`--round-bonus`), progresso na pista (`--progress-bonus`), cada interruptor de trem de pouso, flaps
+e freios (`--config-bonus`), cada avião do tráfego retirado (`--traffic-bonus`) e cada condição de
+pouso cumprida no último turno (`--landing-bonus`). A engine não sabe nada disso.
+
+### Aprender com partidas gravadas
+
+Toda partida jogada no terminal (`skyteam.play`) ou no HUD é salva em `games/`. Para treinar a rede
+imitando essas jogadas (as jogadas de partidas vencidas pesam mais, `--win-weight`):
+
+```bash
+python -m skyteam.ai.imitation --data games --out runs/bc.pt
+python -m skyteam.ai.ppo --init runs/bc.pt --out runs/a_partir_das_partidas
+```
+
+`--init` também aceita um modelo já treinado, para refinar o modelo publicado com as suas partidas.
+
+### Avaliar
+
+```bash
+python -m skyteam.simulate --scenario YUL_green --policy models/yul_ppo.pt --games 1000
+```
+
+### Modelo publicado
+
+`models/yul_ppo.pt` foi treinado só por autojogo no YUL (pista verde/amarela). Em 2.000 jogos com seeds nunca vistas
+no treino (`--seed 5000000`), pousa em **82%** das partidas (a política aleatória pousa em 0%). As derrotas
+restantes são, em ordem: configuração de pouso incompleta (6%), eixo fora do centro no pouso (4,3%),
+tráfego ainda na pista (2,5%), velocidade acima dos freios (2,2%) e espaço obrigatório vazio (1,4%).
+A partida dura em média cerca de 75 decisões e o modelo joga cerca de 16 partidas por segundo em CPU.
+
+O treino partiu do zero e foi feito em etapas, cada uma continuando a anterior com `--init`, enquanto
+os termos de modelagem eram ajustados. A última etapa usou o comando de exemplo acima (12 milhões de
+passos, cerca de 85 minutos em 4 núcleos de CPU) e subiu a taxa de pouso nas seeds de avaliação de 0,3%
+para cerca de 80%.
