@@ -12,7 +12,7 @@ Ids referem-se a [`regras_extraidas.md`](regras_extraidas.md).
 | # | O que falta | Usado em | Regras |
 |---|---|---|---|
 | P12 | **As pistas de aproximação** de todos os cenários (as duas faces de cada carta/tira): número de espaços, ícones de tráfego por espaço, ícones de dado de Tráfego e posições permitidas do eixo (Curvas). Precisa também da faixa colorida, para casar a pista com o cenário. | `data/approach_tracks/` | R-APP-07, R-SET-07, R-TRD-*, R-TRN-05 |
-| P12b | **As trilhas de altitude** (frente e verso): espaços, ícones de rerrolagem e a seta de primeiro jogador em cada espaço. | `data/altitude_tracks/` | R-TURN-02, R-RER-05, R-ALT-01/02 |
+| P12b | **O outro lado da trilha de altitude** (cenários vermelhos e pretos): espaços, rerrolagens e setas. O lado verde/amarelo já foi recebido. | `data/altitude_tracks/` | R-ALT-02 |
 | P14 | Faces do **dado de Tráfego**. | `modules/traffic_dice.py` | R-TRD-07 |
 | P16 | **Trilha de Querosene**: numeração completa e posição do X. | `modules/kerosene.py` | R-KER-05 |
 | P17 | **Fichas de Estagiário**: o conjunto completo da caixa. A placa tem 5 espaços (ilustração RV p.4). | `modules/intern.py` | R-INT-09 |

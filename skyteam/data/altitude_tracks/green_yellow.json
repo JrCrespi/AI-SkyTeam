@@ -1,0 +1,16 @@
+{
+  "id": "green_yellow",
+  "difficulties": ["green", "yellow"],
+  "source": {"component": "Altitude Track, green/yellow side", "manual": "MB p.3 (5), p.4", "photo": "João, 2026-10-08"},
+  "verified": true,
+  "notes": "Spaces listed in play order (round 1 first). The last space is the landing (final round). first_player comes from the arrow on each screen: blue/left = pilot, yellow/right = copilot.",
+  "spaces": [
+    {"round": 1, "altitude": 6000, "first_player": "pilot",   "reroll": true,  "final": false},
+    {"round": 2, "altitude": 5000, "first_player": "copilot", "reroll": false, "final": false},
+    {"round": 3, "altitude": 4000, "first_player": "pilot",   "reroll": false, "final": false},
+    {"round": 4, "altitude": 3000, "first_player": "copilot", "reroll": false, "final": false},
+    {"round": 5, "altitude": 2000, "first_player": "pilot",   "reroll": true,  "final": false},
+    {"round": 6, "altitude": 1000, "first_player": "copilot", "reroll": false, "final": false},
+    {"round": 7, "altitude": 0,    "first_player": "pilot",   "reroll": false, "final": true}
+  ]
+}

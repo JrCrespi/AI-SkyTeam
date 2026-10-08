@@ -69,14 +69,14 @@ Os ids das regras da versão anterior foram mantidos. Ids novos foram acrescenta
 | R-RER-02 | **A qualquer momento durante a rodada**, **qualquer** jogador pode gastar uma ficha do estoque. | MB p.4, p.9 | CONFIRMADA |
 | R-RER-03 | Ao gastar uma ficha, **ambos** os jogadores podem relançar qualquer quantidade (inclusive zero) dos seus dados ainda atrás da Tela, uma única vez. Exemplo: o Piloto relança 2 de 3 e o Copiloto relança os 4. | MB p.4 | CONFIRMADA |
 | R-RER-04 | Fichas não gastas permanecem no estoque nas rodadas seguintes. | MB p.4 | INFERIDA: o manual diz "adicione-a ao seu estoque" e não fala em expiração. O jogo tem 2 fichas no total (MB p.3). |
-| R-RER-05 | Espaços da trilha base que têm ícone de rerrolagem: **6000** (texto) e mais um, que parece ser **2000**. | MB p.4 (6000), p.3 (ilustração) | 6000 CONFIRMADA; o segundo é ILUSTRAÇÃO |
+| R-RER-05 | Trilha verde/amarela: os espaços com ícone de rerrolagem são **6000** e **2000**. | MB p.4, foto da trilha | CONFIRMADA. Dados em `skyteam/data/altitude_tracks/green_yellow.json`. |
 
 ## 5. Fase 2: alocação de dados (regras gerais)
 
 | Id | Regra | Fonte | Status |
 |---|---|---|---|
 | R-TURN-01 | Os jogadores se alternam. | MB p.4 (A) | CONFIRMADA |
-| R-TURN-02 | Uma seta na tela de Altitude Atual indica quem joga primeiro na rodada. O Piloto começa a primeira rodada. | MB p.4 (A) | CONFIRMADA. A direção da seta em cada espaço é FALTA COMPONENTE. |
+| R-TURN-02 | Uma seta na tela de Altitude Atual indica quem joga primeiro na rodada. Na trilha verde/amarela, o Piloto começa em 6000, 4000, 2000 e no pouso, e o Copiloto começa em 5000, 3000 e 1000. Seta azul à esquerda = Piloto; seta amarela à direita = Copiloto. | MB p.4 (A), foto da trilha | CONFIRMADA (verde/amarela) |
 | R-TURN-03 | Na sua vez, o jogador coloca **um e apenas um** dado em um espaço **livre** (sem dado). | MB p.4 (B) | CONFIRMADA |
 | R-TURN-04 | Restrição de cor: o Piloto só usa espaços azuis e o Copiloto só usa espaços laranja. Espaços azuis e laranja ao mesmo tempo aceitam os dois. | MB p.4 | CONFIRMADA |
 | R-TURN-05 | Restrições numéricas são impressas nos espaços. Exemplo: o 1º Flap só aceita 1 ou 2. | MB p.4 (C, D) | CONFIRMADA |
@@ -186,8 +186,8 @@ Os ids das regras da versão anterior foram mantidos. Ids novos foram acrescenta
 | R-END-01 | Passos em ordem: (1) avançar a Trilha de Altitude 1 espaço (−1000 pés); (2) recolher os dados; (3) verificar o fim de jogo. | MB p.9 | CONFIRMADA |
 | R-END-02 | Se o Aeroporto está na Posição Atual e o Avião aparece na Altitude Atual, joga-se a rodada final. Caso contrário, começa uma nova rodada. | MB p.9, p.10 | CONFIRMADA |
 | R-END-03 | Se o Avião aparece na Altitude Atual e o Aeroporto não está na Posição Atual, houve pouso forçado antes do aeroporto e a partida é perdida. | MB p.10 | CONFIRMADA |
-| R-ALT-01 | A trilha base tem 7 espaços, um por rodada: 6000, 5000, 4000, 3000, 2000, 1000 e o espaço do Avião (rodada final). | MB p.9, p.3 (ilustração) | 7 espaços CONFIRMADOS. Os valores intermediários são ILUSTRAÇÃO. |
-| R-ALT-02 | Existe mais de uma trilha de altitude: a do jogo base é "verde/amarelo". Cenários vermelhos e pretos podem usar outra. | MB p.3 (5) | CONFIRMADA a existência. Conteúdo: FALTA COMPONENTE (P12). |
+| R-ALT-01 | A trilha verde/amarela tem 7 espaços, um por rodada: 6000, 5000, 4000, 3000, 2000, 1000 e o espaço do Avião (rodada final). | MB p.9, foto da trilha | CONFIRMADA |
+| R-ALT-02 | Existe mais de uma trilha de altitude: a do jogo base é "verde/amarelo". Cenários vermelhos e pretos podem usar outra. | MB p.3 (5) | Verde/amarela CONFIRMADA. O outro lado (presumivelmente vermelho/preto) é FALTA COMPONENTE (P12b). |
 | R-END-04 | Os módulos podem acrescentar passos ao fim da rodada. O Querosene, por exemplo, acrescenta um passo "bem no final". | RV p.3 | CONFIRMADA |
 
 ## 14. Rodada final e pouso

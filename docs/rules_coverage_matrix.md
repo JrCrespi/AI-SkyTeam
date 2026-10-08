@@ -12,7 +12,7 @@ Atualizada ao fim de cada etapa. Situação atual: **Etapa 1 concluída e confer
 | Turnos e colocação | R-TURN-* | Parcial (P2) | Não | Não | core/rules.py | test_placement.py |
 | Ações obrigatórias | R-MAND-* | Manual | Não | Não | mechanics/loss.py | test_loss_conditions.py |
 | Dados | R-DIE-* | Manual | Não | Não | core/dice.py | test_dice.py |
-| Rerrolagem | R-RER-* | Parcial (P3, P12b) | Não | Não | mechanics/rerolls.py | test_rerolls.py |
+| Rerrolagem | R-RER-* | Parcial (P3) | Não | Não | mechanics/rerolls.py | test_rerolls.py |
 | Eixo | R-AXI-* | Parcial (P21) | Não | Não | mechanics/axis.py | test_axis.py |
 | Motores | R-ENG-* | Manual | Não | Não | mechanics/engines.py | test_engines.py |
 | Aproximação | R-APP-* | Parcial (P7, P12) | Não | Não | mechanics/approach.py | test_approach.py |
@@ -21,7 +21,7 @@ Atualizada ao fim de cada etapa. Situação atual: **Etapa 1 concluída e confer
 | Flaps | R-FLA-* | Parcial (P9) | Não | Não | mechanics/flaps.py | test_flaps.py |
 | Freios | R-BRK-* | Parcial (P10) | Não | Não | mechanics/brakes.py | test_brakes.py |
 | Concentração / Café | R-COF-* | Parcial (P4) | Não | Não | mechanics/concentration.py | test_concentration.py |
-| Fim de rodada / Altitude | R-END-*, R-ALT-* | Parcial (P12b) | Não | Não | mechanics/altitude.py | test_altitude.py |
+| Fim de rodada / Altitude | R-END-*, R-ALT-* | Parcial (verde/amarela OK; vermelha/preta: P12b) | Não | Não | mechanics/altitude.py | test_altitude.py |
 | Pouso (vitória A–D) | R-LND-* | Manual | Não | Não | mechanics/landing.py | test_landing.py |
 | Derrotas (11 condições) | R-LOSS-* | Manual | Não | Não | mechanics/loss.py | test_loss_conditions.py |
 | Efeito de pista: dado de Tráfego | R-TRD-* | Parcial (P14) | Não | Não | modules/traffic_dice.py | test_traffic_dice.py |
